@@ -19,6 +19,7 @@
 		1C3512FB2B94DB5F009F240B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1C3512FD2B94DB61009F240B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C3513002B94DB61009F240B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1C3513072B94DC9B009F240B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +36,7 @@
 		1C3512ED2B94DB5F009F240B = {
 			isa = PBXGroup;
 			children = (
+				1C3513072B94DC9B009F240B /* README.md */,
 				1C3512F82B94DB5F009F240B /* FoodPicker_lv.0 */,
 				1C3512F72B94DB5F009F240B /* Products */,
 			);
