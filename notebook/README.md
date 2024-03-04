@@ -4,3 +4,4 @@
 - 記錄每天學到的語法與相關知識
 
 ## 2024.03.04
+![2024-03-04 16.07.05](https://raw.githubusercontent.com/HsinYuanHsieh0810/FoodPicker_lv.0/main/notebook/img/2024-03-04%2016.07.05.png)
