@@ -1,9 +1,7 @@
 #  SwiftUI 學習
-##  希望每天可以有一點點進度就好
+> 參考影片：https://www.youtube.com/playlist?list=PLXM8k1EWy5khONZ9M9ytK8mMrcEOXvGsE
+- 希望每天有一點點進度就好 腦袋才不會生鏽
+- 記錄每天學到的語法與相關知識
 
-##  記錄每天學到語法與如何操作
-
-
-## 123
-
-#3433332333333
+## 2024.03.04
+### 
