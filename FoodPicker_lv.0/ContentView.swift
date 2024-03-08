@@ -7,28 +7,42 @@
 
 import SwiftUI
 
-class SomeClass {
-    var selectedFood: String?
-}
+
 
 struct ContentView: View {
     let food = ["漢堡", "沙拉", "披薩", "義大利麵", "雞腿便當", "刀削麵", "火鍋", "牛肉麵", "關東煮"]// 食物陣列
-    var selectedFood: String?// 選好的食物變數  一開始為空
-    let someClass = SomeClass()
+    @State private var selectedFood: String?// 選好的食物變數  一開始為空
     
     var body: some View {
-        VStack {
+        VStack(spacing: 30) {
             Image("dinner")
                 .resizable()// 讓圖片可以先resize
                 .aspectRatio(contentMode: .fit)
 
             Text("今天吃什麼")
-                .font(.largeTitle)
+                .font(.title)
                 .bold()
             
-            Button("告訴我") {
-                someClass.selectedFood = food.shuffled().first {$0 != selectedFood}
+            if selectedFood != .none {
+                Text(selectedFood ?? "")// 如果沒有值，我們就顯示空
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundStyle(.green)
             }
+            
+            Button("告訴我") {
+                selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
+            }
+            .font(.title)
+            .buttonStyle(.borderedProminent)
+            
+            Button("重置") {
+                selectedFood = .none
+            }
+            .font(.title)
+            .buttonStyle(.borderedProminent)
+            
+            
         }
         .padding()
     }

@@ -44,7 +44,7 @@ View 通常要(1)在 body 屬性中描述換面樣子；(2) body 的類型必須
 
 ## 2024.03.06
 
-### 調整圖片大小
+### 調整圖片大小、亂數
 
 加入圖片中，我們通常會使用 ```Image("檔案名稱")```，這些圖片會放在 Assets 中，而預設畫面中，會有```Image(systemName: "globe")```，則是使用系統預設的 Icon。
 
@@ -80,3 +80,66 @@ View 通常要(1)在 body 屬性中描述換面樣子；(2) body 的類型必須
 但設定好後會出現 self is immutable，因為目前這邊數是在一個 struct 中，無法直接對 ```selectedFood```進行修改，如果要在內部修改，需使用```mutating```，但目前 body 是一個計算屬性，無法更換成該關鍵字。
 
 ➔ 解決方法：將```selectedFood```另外寫，但會有缺點。明天待續～
+
+## 2024.03.09
+
+### State、間距調整(spacing)、Button style 調整
+
+但另外寫這樣在我們每次更新```selectedFood```時，需要通知 View 更改畫面，這樣會非常麻煩。<br>
+因此 SwiftUI 提供一個 Property Wrapper：```@state```來偵測。<br>
+只要該變數數值有變化，就會通知畫面更新。<br>
+那通常也會搭配 ```private```，因為這應該只屬於這畫面資訊，不應該在其它地方被啟動。<br>
+程式碼片段如下：
+
+```Swift
+  let food = ["漢堡", "沙拉", "披薩", "義大利麵", "雞腿便當", "刀削麵", "火鍋", "牛肉麵", "關東煮"]// 食物陣列
+    @State private var selectedFood: String?// 選好的食物變數  一開始為空
+
+    var body: some View {
+        VStack {
+            Image("dinner")
+                .resizable()// 讓圖片可以先resize
+                .aspectRatio(contentMode: .fit)
+
+            Text("今天吃什麼")
+                .font(.largeTitle)
+                .bold()
+
+            Text(selectedFood ?? "還沒設定")// 如果沒有值，我們就顯示"還沒設定"
+
+            Button("告訴我") {
+                selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
+            }
+        }
+        .padding()
+    }
+```
+
+接著我們可以調整間距來避免每個 View 太擠。
+可以加上```padding```但如果每個 View 都要加，這樣 code 不簡潔。
+故我們可以在 ```Vstack```裡面添加 ```spacing```
+
+```Swift
+    VStack(spacing: 30) {
+        // code
+        }
+```
+
+另外，因為不顯示時，會有空白，這邊我們加入一個判斷式。
+另外```.none```跟```nil```都代表為空，
+
+- ```.none```：在Swift中，Optional 是一種枚舉，```.none```其實就是 Optional 的一個狀態，表示沒有值。當你給一個 Optional 變量賦值 nil 時，實際上就是將其狀態設置為```.none```。
+- ```nil```：一種更加直觀的方式來表示一個Optional變量沒有值，當你見到 nil，它指的就是 Optional的 ```.none```狀態
+
+By ChatGPT 解答～<br>
+在這樣的解析中，我認為兩種是都可以互通的。
+
+```Swift
+    // 如果 selectedFood 不是空的話，就顯示
+    if selectedFood != .none {
+        Text(selectedFood ?? "")// 如果有值，我們就顯示空
+            .font(.largeTitle)
+            .bold()
+            .foregroundStyle(.green)
+    }
+```
