@@ -8,4 +8,4 @@
 
 每天一點點記錄，除了 Swift 外順便學個 Markdown~
 
-記錄的東西放在 notebook/README.md 中
+記錄的東西放在 [notebook/README.md](notebook/README.md) 中
