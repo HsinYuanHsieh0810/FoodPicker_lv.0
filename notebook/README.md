@@ -143,3 +143,71 @@ By ChatGPT 解答～<br>
             .foregroundStyle(.green)
     }
 ```
+
+## 2024.03.10
+
+### animation、背景色、frame
+
+這邊我們可以加入動畫讓文字改變的時，更加流暢。
+這邊使用到```animation```，另外```value```就是會產生動畫的資料，必且資料形態需要是 equatabel 的，才能知道是否有變化。
+
+```Swift
+    .animation(.easeInOut, value: selectedFood)
+```
+
+另外需要注意的是，```animation```擺放的位置，我們需要在他改變發生之前就開始觀察了，所以在這個例子中，我們就將它擺放在 ```Vstack```上， ```Vstack```出現時，就會開始觀察 selectedFood 了，假如今天擺放在食物選擇時，反而要點選第一次後才會有動畫，因點選後才會開始觀察！
+
+目前所使用的 Button 雖然很方便，但無法進行細部的調整。<br>
+所以我們改成用這種方法
+
+```Swift
+    Button(role: .none) {
+        selectedFood = .none
+    } label: {
+        Text("重置").frame(width: 200)
+    }
+    .font(.title)
+    .buttonStyle(.borderedProminent)
+```
+
+上方程式碼中， 可以看到最大的差異就是原本的 Button 無法對 Text 的進行更改，因為字包在整個 Button 的 View；現在則使可以用 frame 來調整，撐出整個 Button 的大小。
+
+另外，針對 Button 的風格中，也可以使用到```.buttonStyle```、```.buttonBorderShape```、```.controlSize```.....等等。
+
+但是此時發現到這樣有些東西重複寫、太多重複程式碼了。
+這時可以將這些重複的寫在最外層，如果有些需要特別更改的程式不會強行覆蓋。
+例如：
+
+```Swift
+    VStack(spacing: 30) {
+            // code...
+            if selectedFood != .none {
+                Text(selectedFood ?? "")// 如果沒有值，我們就顯示空
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundStyle(.green)
+            }
+            // code...
+            }
+            .font(.title)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.large)
+            .animation(.easeInOut, value: selectedFood)
+```
+
+這邊的 font 全部設置為```.title```，但例面的 selectedFood 設置為 ```.largeTitle```，它並不會覆蓋成```.title```。
+
+另外可以發現到按鈕的顏色都是藍色。
+因為它會自己抓預設的顏色，所以如果要更動的化，可以到 Asset 檔案進行更改！
+
+另外，我們在設定背景顏色時，因為調整器是放在```Vstack```底下，```Vstack```大小以裡面的內容大小來決定，如果要讓整個空間全滿，我們就需要透過```frame```來設定，但我們不知道高度多少，可以透過設定```maxHeight: .infinity```方法，直接用無限方法填滿。
+
+```Swift
+    VStack(spacing: 30) {
+            // code...
+           }
+           .frame(maxHeight: .infinity)
+```
+
+接著下部影片要來調整按鈕中動畫不穩定的問題！

@@ -20,7 +20,6 @@ struct ContentView: View {
                 .aspectRatio(contentMode: .fit)
 
             Text("今天吃什麼")
-                .font(.title)
                 .bold()
             
             if selectedFood != .none {
@@ -30,21 +29,33 @@ struct ContentView: View {
                     .foregroundStyle(.green)
             }
             
-            Button("告訴我") {
+            Button(role: .none) {
                 selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
+            } label: {
+                Text(selectedFood == .none ? "告訴我": "換一個")
+                    .frame(width: 200)
             }
-            .font(.title)
-            .buttonStyle(.borderedProminent)
+            .padding(.bottom, -15)
             
-            Button("重置") {
+
+            Button(role: .none) {
                 selectedFood = .none
+            } label: {
+                Text("重置").frame(width: 200)
             }
             .font(.title)
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
             
             
         }
         .padding()
+        .frame(maxHeight: .infinity)
+        .background(Color(.secondarySystemBackground))
+        .font(.title)
+        .buttonStyle(.borderedProminent)
+        .buttonBorderShape(.capsule)
+        .controlSize(.large)
+        .animation(.easeInOut, value: selectedFood)
     }
 }
 
