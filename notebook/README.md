@@ -210,4 +210,53 @@ By ChatGPT 解答～<br>
            .frame(maxHeight: .infinity)
 ```
 
-接著下部影片要來調整按鈕中動畫不穩定的問題！
+接著下部影片要來調整按鈕中動畫相關的問題！
+
+## 2024.03.12＆03.15
+
+### 動畫相關概念
+
+決定動畫的流程如下圖所示：
+
+![2024-03-12 14.50.50](https://raw.githubusercontent.com/HsinYuanHsieh0810/FoodPicker_lv.0/main/notebook/img/2024-03-12%2014.50.50.png)
+
+偵測到變化主要是用 Equtable 來做比較，只要跟原先有一點點差異，E.g 大小、位置、長短...等等，就會執行動畫，呈現出不一樣的地方。
+
+接著決定要用變形還是轉場的關鍵就是 View 的身分。
+
+#### View 介紹
+
+- View 是一個 Struct，所以需要判斷 View 之間的關聯性
+- 兩個步驟確認身分：(1)先判斷結構位置(Hierarchy)，(2)再判斷 ID
+
+#### 結構位置-Hirerarchy
+
+以目前範例來說，其 Hierarchy 主要事由 ContentView、Vstack、Image、Text和兩個 Button 組成。
+
+主要結構圖如下：
+
+![2024-03-12 15.27.16](https://raw.githubusercontent.com/HsinYuanHsieh0810/FoodPicker_lv.0/main/notebook/img/2024-03-12%2015.27.16.png)
+
+但其實我們還有一個藏在中間的 View，就是用來顯示食物用的，但它並不會一直出現，所以其實當中的 Text 可以拆成兩個 View，如下方圖片：<br>
+注意！這邊的 EitherView 並非真有此 View，實際上會包裝成另一個類型，這邊只是為了方便講解。
+
+![2024-03-12 15.31.05](https://raw.githubusercontent.com/HsinYuanHsieh0810/FoodPicker_lv.0/main/notebook/img/2024-03-12%2015.31.05.png)
+
+我們也可以繼續往下拆解，結果如下：
+
+![2024-03-12 15.40.24](https://raw.githubusercontent.com/HsinYuanHsieh0810/FoodPicker_lv.0/main/notebook/img/2024-03-12%2015.40.24.png)
+
+回到前面問題 - 變化前後是同一個 View 嗎？<br>
+Answer：不一樣！可以看到沒有字時是 EmptyView；有文字時，就是 Text View 因此轉換時就會啟動轉場動畫。
+
+而預設轉場動畫就是淡入淡出，當文字出現時，其他 View 需讓出位置，而這些 View 因為都是同一個 View，故產生變形動畫。
+
+#### 文字動畫問題
+
+在目前程式中，"告訴我" 跟 "換一個" 按鈕中的文字變化時，發現到 SwiftUI 在做似乎是轉場的淡入淡出效果。這是因為它不知道如何做中文字的變形造成的，忽略不能掌握的變化，所以預設就會在開始的地方做淡出，結束的地方做淡入，而在此案例中，又剛好是在不同的起始位置，導致有兩個 View 轉場的錯覺。
+
+因此，解決方法就是加入```.transformEffect```，這個調整器可以替 View 做一些變形效果，這邊我們可以先加入```.transformEffect(.init(translationX: 50, y: 0))```試試看，可以發現到正常了！<br>
+
+這是因為加入這個調整器後，強制不讓他去忽略這個變形，因此在前面的示範中，目前是使用```translationX: 50, y: 0)```，但這樣會改變位置，調成X: 0, y:0，又感覺太麻煩，我們可以使用``` .transformEffect(.identity)```<br>
+
+接著，在顯示 selectedFood 時因為在iOS16預設為淡入淡出，如果是iOS15就是不是了，故我們其實也需要進行更改，解決方法就是加入```.id(selectedFood)```，表達出每個食物的獨立性，達成轉場效果。

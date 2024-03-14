@@ -27,13 +27,16 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .bold()
                     .foregroundStyle(.green)
+                    .id(selectedFood)
             }
             
             Button(role: .none) {
                 selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
             } label: {
                 Text(selectedFood == .none ? "告訴我": "換一個")
+                    .animation(.none, value: selectedFood)
                     .frame(width: 200)
+                    .transformEffect(.identity)
             }
             .padding(.bottom, -15)
             
