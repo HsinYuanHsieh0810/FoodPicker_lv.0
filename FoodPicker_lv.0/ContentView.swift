@@ -28,10 +28,18 @@ struct ContentView: View {
                     .bold()
                     .foregroundStyle(.green)
                     .id(selectedFood)
+                    .transition(.asymmetric(
+                        insertion: .opacity
+                            .animation(.easeInOut(duration:0.5).delay(0.2)),
+                                            
+                        removal: .opacity
+                            .animation(.easeInOut(duration:0.4))))
             }
             
-            Button(role: .none) {
-                selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
+            Button {
+                withAnimation{
+                    selectedFood = food.shuffled().first {$0 != selectedFood}// 亂數隨機
+                }
             } label: {
                 Text(selectedFood == .none ? "告訴我": "換一個")
                     .animation(.none, value: selectedFood)
@@ -41,8 +49,10 @@ struct ContentView: View {
             .padding(.bottom, -15)
             
 
-            Button(role: .none) {
-                selectedFood = .none
+            Button {
+                withAnimation{
+                    selectedFood = .none
+                }
             } label: {
                 Text("重置").frame(width: 200)
             }

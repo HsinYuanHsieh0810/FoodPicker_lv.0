@@ -259,4 +259,72 @@ Answer：不一樣！可以看到沒有字時是 EmptyView；有文字時，就�
 
 這是因為加入這個調整器後，強制不讓他去忽略這個變形，因此在前面的示範中，目前是使用```translationX: 50, y: 0)```，但這樣會改變位置，調成X: 0, y:0，又感覺太麻煩，我們可以使用``` .transformEffect(.identity)```<br>
 
-接著，在顯示 selectedFood 時因為在iOS16預設為淡入淡出，如果是iOS15就是不是了，故我們其實也需要進行更改，解決方法就是加入```.id(selectedFood)```，表達出每個食物的獨立性，達成轉場效果。
+接著，在顯示 selectedFood 時因為在 iOS16 預設為淡入淡出，如果是iOS15就是不是了，故我們其實也需要進行更改，解決方法就是加入```.id(selectedFood)```，表達出每個食物的獨立性，達成轉場效果。
+
+## 2024.03.25
+
+### 動畫相關概念-2
+
+我們也可以針對轉場調整添加```.transition()```效果，如果想要額外效果
+，甚至可以添加```.transition(.scale.combined(with: .slide))```的轉場效果，以滑行方式變大縮小。
+
+甚至還可以設定進場、離場動畫：
+
+```Swift
+.transition(.asymmetric(
+            insertion: .opacity// 進入-使用 easeInOut
+                .animation(.easeInOut(duration:0.5).delay(0.2)),
+
+            removal: .opacity// 消失-使用 easeInOut
+                .animation(.easeInOut(duration:0.4))))
+
+```
+
+目前我們是在最外層來定義動畫，但在實際實作時，如果需要精確控制每個動畫的出現就需要個別設定，以本例的 Button為例：
+
+```Swift
+    Button {
+        withAnimation{
+            selectedFood = .none
+        }
+    } label: {
+        Text("重置").frame(width: 200)
+    }
+
+```
+
+#### if 使用時機
+
+除此之外，我們一定需要注意 if 使用的時機！
+
+```Swift
+    if selectedFood != .none {
+        Color.pink
+    } else {
+        Color.blue
+    }
+```
+
+上方程式碼會看到大小不同的色塊淡入淡出，主要是在執行轉場過程，這邊有些人會認為是兩個不同樣東西，但 SwiftUI 會認為它們兩個是不同的東西，因為 if 會被包裝成 EitherView ，在結構上會佔據不同的位置。
+
+但如果我們改成條件運算子的寫法：
+
+```Swift
+    selectedFood != .none ? Color.pink : Color.blue
+```
+
+這樣就會成變形動畫，因為條件運算子會運算來選擇一個 View。
+
+if else 的本質就是在做流程控制，並沒有什麼限制。
+我們現在做使用的 if else ，背後其實如下
+
+```Swift
+    if selectedFood != .none {
+        // code
+    } else {
+        EmptyView()
+    }
+```
+
+我們之可以使用，是因為它有被包裝過，包裝後會讓每個 Block，變成獨立的分支(Or 結構位置)，以此例子來說，我們包裝成兩個 generic 的 EitherView(ViewBuilder 概念)，如果不想要轉場，想要用不同概念呈現，我們就不能用 if else 來處理！
+
